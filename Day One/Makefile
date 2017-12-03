@@ -1,5 +1,5 @@
 CXX      := -g++
-CXXFLAGS := -std=c++17 -pedantic-errors -O0
+CXXFLAGS := -std=c++11 -pedantic-errors -O0 -g
 LDFLAGS  := -L/usr/lib -lstdc++ -lm -lpthread
 BUILD    := build
 OBJ_DIR  := $(BUILD)/objects

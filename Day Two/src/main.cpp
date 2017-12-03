@@ -20,61 +20,45 @@
 
 #include "main.h"
 
-#define MY_POS	(347991-1 )
-
-typedef struct{
-	int x_pos;
-	int y_pos;
-}coord;
-
-typedef enum{
-	UP		= 1,
-	DOWN	= 3,
-	LEFT	= 2,
-	RIGHT	= 0
-}direction;
+#define ASCII_TO_NUM	48
 
 int main(int argc, char *argv[])
 {
-	int step_size = 1;
-	int	steps = 0;
-	int direction = 0;
-	coord position;
+	/* Input file stream */
+	std::ifstream ifs("Input", std::ifstream::in);
 
-	position.x_pos = position.y_pos = 0;
+	/* Single line input string */
+	std::string 		input_line;
+	std::stringstream	input_line_stream;
 
-	for(int loop = 0; loop < MY_POS; loop ++)
+	/* Vector to store values in */
+	std::vector<int>	input_line_int;
+	int					number_add;
+	int					min = 0;
+	int 				max = 0;
+	int					sum = 0;
+
+	do
 	{
-		switch(direction % 4)
+		std::getline(ifs, input_line, '\n');
+		if(input_line.empty() != true)
 		{
-			case RIGHT:
-				position.x_pos += 1;
-				break;
-			case UP:
-				position.y_pos += 1;
-				break;
-			case LEFT:
-				position.x_pos -= 1;
-				break;
-			case DOWN:
-				position.y_pos -= 1;
-				break;
+			input_line_int.clear();
+			input_line_stream.clear();
+			input_line_stream.str(input_line);
+			do{
+				input_line_stream >> number_add;
+				input_line_int.push_back(number_add);
+			}while(!input_line_stream.eof());
+			max = *std::max_element(input_line_int.begin(), input_line_int.end());
+			min = *std::min_element(input_line_int.begin(), input_line_int.end());
+			sum += std::abs(max - min);
 		}
-		steps ++;
-		if( steps % step_size == 0)
-		{
-			direction++;
-			steps = 0;
-		}
-		if(direction % 2 == 0 && steps == 0)
-		{
-			step_size ++;
-		}
-	}
 
-	std::cout << "Y Pos: " << position.y_pos
-			<< " X Pos:" << position.x_pos
-			<< " Total Moves: " << std::abs(position.x_pos) + std::abs(position.y_pos);
+	}while(ifs.eof() != true);
 
-	return 0;
+
+	std::cout << sum;
+
+    return 0;
 }
