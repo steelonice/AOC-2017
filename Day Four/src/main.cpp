@@ -20,7 +20,9 @@
 
 #include "main.h"
 
-int part_two_solver(std::vector<int> input_vec);
+int get_num_valid(std::vector<std::string> input_vector);
+int get_num_valid_w_anagram(std::vector<std::string> input_vector);
+
 
 int main(int argc, char *argv[])
 {
@@ -32,69 +34,84 @@ int main(int argc, char *argv[])
 	std::stringstream	input_line_stream;
 
 	/* Vector to store values in */
-	std::vector<int>	input_line_int;
-	int					number_add;
-	int					min = 0;
-	int 				max = 0;
-	int					sum = 0;
-	int					sum_p2 = 0;
+	std::vector<std::string>	input_line_string;
+	std::string					number_add;
+
+	int sum = 0;
+	int sum_anagram = 0;
 
 	do
 	{
 		std::getline(ifs, input_line, '\n');
 		if(input_line.empty() != true)
 		{
-			input_line_int.clear();
+			input_line_string.clear();
 			input_line_stream.clear();
 			input_line_stream.str(input_line);
 			do{
 				input_line_stream >> number_add;
-				input_line_int.push_back(number_add);
+				input_line_string.push_back(number_add);
 			}while(!input_line_stream.eof());
-			max = *std::max_element(input_line_int.begin(), input_line_int.end());
-			min = *std::min_element(input_line_int.begin(), input_line_int.end());
-			sum += std::abs(max - min);
-			sum_p2 += part_two_solver(input_line_int);
+
+			sum += get_num_valid(input_line_string);
+			sum_anagram += get_num_valid_w_anagram(input_line_string);
 		}
 
 	}while(ifs.eof() != true);
 
-
-	std::cout << sum << "\n" << sum_p2;
-
+	std::cout << "Num Valid Passwords: " << sum << "\n";
+	std::cout << "Num Valid Passwords w/ Anagram Check: " << sum_anagram;
     return 0;
 }
 
-int part_two_solver(std::vector<int> input_vec)
+int get_num_valid(std::vector<std::string> input_vector)
 {
-	int ret_val;
-
-	for(int i = 0; i < input_vec.size(); i++)
+	for(int i = 0; i < input_vector.size(); i++)
 	{
-		for(int j = 0; j < input_vec.size(); j++)
+		for(int j = 0; j < input_vector.size(); j++)
 		{
 			if(i == j)
 			{
-			}
-			else if(input_vec.at(i) >= input_vec.at(j))
-			{
-				if(input_vec.at(i) % input_vec.at(j) == 0)
-				{
-					return input_vec.at(i) / input_vec.at(j);
-				}
-			}
-			else if(input_vec.at(i) < input_vec.at(j))
-			{
-				if(input_vec.at(j) % input_vec.at(i) == 0)
-				{
-					return input_vec.at(j) / input_vec.at(i);
 
-				}
+			}
+			else if(input_vector.at(i) == input_vector.at(j))
+			{
+				return 0;
 			}
 		}
 	}
+	return 1;
 }
 
+int get_num_valid_w_anagram(std::vector<std::string> input_vector)
+{
+	std::string sorted_i;
+	std::string sorted_j;
 
+	for(int i = 0; i < input_vector.size(); i++)
+	{
+		sorted_i = input_vector.at(i);
+		std::sort(sorted_i.begin(), sorted_i.end());
 
+		for(int j = 0; j < input_vector.size(); j++)
+		{
+
+			if(i == j)
+			{
+
+			}
+			else
+			{
+				sorted_j = input_vector.at(j);
+				std::sort(sorted_j.begin(), sorted_j.end());
+				if(sorted_i == sorted_j)
+				{
+					return 0;
+				}
+			}
+
+		}
+	}
+	return 1;
+}
 
